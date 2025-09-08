@@ -502,52 +502,62 @@
                         <h2 class="text-3xl font-bold orbitron mb-8 gradient-text text-center">ANFRAGE SENDEN</h2>
 
                         <form action="https://formsubmit.co/tornadoworker@gmail.com" method="POST" class="space-y-6" id="contactForm">
+                            <!-- FormSubmit Konfiguration -->
+                            <input type="hidden" name="_subject" value="Neue Anfrage von Koder Autoverwertung Website">
+                            <input type="hidden" name="_captcha" value="false">
+                            <input type="hidden" name="_template" value="table">
+                            <input type="hidden" name="_next" value="https://koder-autoverwertung.de/danke.html">
                             
                             <!-- Vorname + Nachname -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-cyan-400 font-semibold mb-2" for="vorname">Vorname</label>
+                                    <label class="block text-cyan-400 font-semibold mb-2" for="vorname">Vorname *</label>
                                     <input type="text" name="Vorname" id="vorname" required class="form-input w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors" minlength="2">
                                 </div>
                                 <div>
-                                    <label class="block text-cyan-400 font-semibold mb-2" for="nachname">Nachname</label>
+                                    <label class="block text-cyan-400 font-semibold mb-2" for="nachname">Nachname *</label>
                                     <input type="text" name="Nachname" id="nachname" required class="form-input w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors" minlength="2">
                                 </div>
                             </div>
 
                             <!-- E-Mail -->
                             <div>
-                                <label class="block text-cyan-400 font-semibold mb-2" for="email">E-Mail</label>
-                                <input type="email" name="E-Mail" id="email" required class="form-input w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors">
+                                <label class="block text-cyan-400 font-semibold mb-2" for="email">E-Mail Adresse *</label>
+                                <input type="email" name="email" id="email" required class="form-input w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors" placeholder="ihre@email.de">
                             </div>
 
                             <!-- Telefon -->
                             <div>
                                 <label class="block text-cyan-400 font-semibold mb-2" for="telefon">Telefon</label>
-                                <input type="tel" name="Telefon" id="telefon" class="form-input w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors">
+                                <input type="tel" name="Telefon" id="telefon" class="form-input w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors" placeholder="+49 123 456789">
                             </div>
 
                             <!-- Service -->
                             <div>
-                                <label class="block text-cyan-400 font-semibold mb-2" for="service">Service</label>
+                                <label class="block text-cyan-400 font-semibold mb-2" for="service">Gewünschter Service</label>
                                 <select name="Service" id="service" class="form-input w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors">
-                                    <option value="Autoankauf">Autoankauf</option>
-                                    <option value="Autoverwertung">Autoverwertung</option>
-                                    <option value="Ersatzteile">Ersatzteile</option>
-                                    <option value="Beratung">Beratung</option>
+                                    <option value="Autoankauf">🚗 Autoankauf</option>
+                                    <option value="Autoverwertung">♻️ Autoverwertung</option>
+                                    <option value="Ersatzteile">🔧 Ersatzteile</option>
+                                    <option value="Beratung">💬 Allgemeine Beratung</option>
                                 </select>
                             </div>
 
                             <!-- Nachricht -->
                             <div>
-                                <label class="block text-cyan-400 font-semibold mb-2" for="nachricht">Nachricht</label>
-                                <textarea name="Nachricht" id="nachricht" rows="4" placeholder="Beschreiben Sie Ihr Anliegen..." class="form-input w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors" minlength="10"></textarea>
+                                <label class="block text-cyan-400 font-semibold mb-2" for="nachricht">Ihre Nachricht *</label>
+                                <textarea name="Nachricht" id="nachricht" rows="4" required placeholder="Beschreiben Sie Ihr Anliegen (z.B. Fahrzeugtyp, Baujahr, Zustand...)" class="form-input w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors" minlength="10"></textarea>
                             </div>
 
                             <!-- Absende-Button -->
                             <button type="submit" class="w-full btn-primary px-8 py-4 rounded-xl text-lg font-bold text-white">
                                 <i class="fas fa-paper-plane mr-3"></i>NACHRICHT SENDEN
                             </button>
+
+                            <!-- Hinweis -->
+                            <p class="text-sm text-gray-400 text-center">
+                                * Pflichtfelder | Ihre Daten werden vertraulich behandelt
+                            </p>
                         </form>
                     </div>
                 </div>
@@ -649,22 +659,59 @@
             }
         }
 
-        // Form validation
+        // Enhanced Form validation
         function validateForm() {
             const form = document.getElementById('contactForm');
-            const inputs = form.querySelectorAll('input[required], textarea[required]');
+            const requiredInputs = form.querySelectorAll('input[required], textarea[required]');
+            const emailInput = document.getElementById('email');
             let isValid = true;
+            let errors = [];
             
-            inputs.forEach(input => {
+            // Check required fields
+            requiredInputs.forEach(input => {
                 if (!input.value.trim()) {
                     input.style.borderColor = '#ff6b6b';
+                    errors.push(`${input.previousElementSibling.textContent} ist erforderlich.`);
                     isValid = false;
                 } else {
                     input.style.borderColor = '#4ecdc4';
                 }
             });
             
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailInput.value.trim() && !emailRegex.test(emailInput.value)) {
+                emailInput.style.borderColor = '#ff6b6b';
+                errors.push('Bitte geben Sie eine gültige E-Mail-Adresse ein.');
+                isValid = false;
+            }
+            
+            // Show errors if any
+            if (!isValid) {
+                alert('Bitte korrigieren Sie folgende Fehler:\n• ' + errors.join('\n• '));
+            }
+            
             return isValid;
+        }
+
+        // Success message after form submission
+        function showSuccessMessage() {
+            const form = document.getElementById('contactForm');
+            const successDiv = document.createElement('div');
+            successDiv.innerHTML = `
+                <div class="bg-green-600 text-white p-4 rounded-lg text-center mb-6">
+                    <i class="fas fa-check-circle text-2xl mb-2"></i>
+                    <p class="font-bold">Vielen Dank für Ihre Nachricht!</p>
+                    <p>Wir werden uns schnellstmöglich bei Ihnen melden.</p>
+                </div>
+            `;
+            form.parentNode.insertBefore(successDiv, form);
+            form.reset();
+            
+            // Remove success message after 5 seconds
+            setTimeout(() => {
+                successDiv.remove();
+            }, 5000);
         }
 
         // Initialize
@@ -684,13 +731,28 @@
                 }
             });
 
-            // Form validation
+            // Enhanced form handling
             const form = document.getElementById('contactForm');
             if (form) {
                 form.addEventListener('submit', function(e) {
-                    if (!validateForm()) {
-                        e.preventDefault();
-                        alert('Bitte füllen Sie alle Pflichtfelder aus.');
+                    e.preventDefault();
+                    if (validateForm()) {
+                        // Submit form data
+                        const formData = new FormData(form);
+                        fetch(form.action, {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                showSuccessMessage();
+                            } else {
+                                throw new Error('Fehler beim Senden');
+                            }
+                        })
+                        .catch(error => {
+                            alert('Es gab einen Fehler beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut oder rufen Sie uns direkt an.');
+                        });
                     }
                 });
             }
